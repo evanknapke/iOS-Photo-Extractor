@@ -17,10 +17,10 @@ client = paramiko.SSHClient()
 
 # add untrusted hosts
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-client.load_system_host_keys() # is this needed?
+client.load_system_host_keys()
 
 #set up local directory
-local_dir = 'extracted_photos' #Users/evanknapke2/Desktop/Pics'
+local_dir = 'extracted_photos'
 os.path.exists(local_dir) or os.makedirs(local_dir)
 
 def progress(transferred, toBeTransferred):
